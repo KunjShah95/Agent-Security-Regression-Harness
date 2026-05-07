@@ -4,10 +4,12 @@ from __future__ import annotations
 
 from agent_harness.adapters import (
     load_python_callable,
+    load_python_object,
     run_http_target,
     run_python_callable_target,
 )
 from agent_harness.assertions import evaluate_assertions
+from agent_harness.openai_agents_adapter import run_openai_agents_target
 from agent_harness.result import AssertionResult, HarnessResult, aggregate_assertion_results
 from agent_harness.scenario import Scenario
 from agent_harness.trace import Trace
@@ -74,6 +76,31 @@ def run_scenario_with_python_target(
     """Run a scenario against a local Python callable target."""
     target_callable = load_python_callable(python_target)
     trace = run_python_callable_target(scenario, target_callable)
+    assertion_results = evaluate_assertions(scenario, trace)
+    top_level_result = aggregate_assertion_results(assertion_results)
+
+    return HarnessResult(
+        scenario_id=scenario.id,
+        mode="live",
+        result=top_level_result,
+        assertions=assertion_results,
+        trace=trace,
+    )
+
+
+def run_scenario_with_openai_agent(
+    scenario: Scenario,
+    openai_agent: str,
+    *,
+    max_turns: int | None = None,
+) -> HarnessResult:
+    """Run a scenario against an OpenAI Agents SDK Agent target."""
+    agent = load_python_object(openai_agent, "OpenAI Agents SDK target")
+    trace = run_openai_agents_target(
+        scenario,
+        agent,
+        max_turns=max_turns,
+    )
     assertion_results = evaluate_assertions(scenario, trace)
     top_level_result = aggregate_assertion_results(assertion_results)
 

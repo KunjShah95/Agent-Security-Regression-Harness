@@ -391,6 +391,23 @@ The adapter records:
 
 The adapter returns a harness `Trace`. It does not evaluate assertions or decide pass/fail.
 
+CLI usage:
+
+```bash
+agent-harness run scenarios/goal_hijack/basic.yaml \
+  --openai-agent my_agent_module:agent
+```
+
+Optional max turns:
+
+```bash
+agent-harness run scenarios/goal_hijack/basic.yaml \
+  --openai-agent my_agent_module:agent \
+  --openai-agent-max-turns 5
+```
+
+The `--openai-agent` value must use an explicit `module:object` import path. Scenario files should not contain Python import paths.
+
 Example Python usage:
 
 ```python

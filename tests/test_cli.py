@@ -345,3 +345,110 @@ def test_run_python_target_returns_adapter_error_for_bad_import(
     assert captured.out == ""
     assert "adapter error:" in captured.err
     assert "Could not import Python target module" in captured.err
+
+
+def test_run_openai_agent_outputs_result_json(capsys, monkeypatch, tmp_path):
+    scenario_file = tmp_path / "scenario.yaml"
+    scenario_file.write_text(VALID_SCENARIO, encoding="utf-8")
+
+    agents_module = tmp_path / "agents.py"
+    agents_module.write_text(
+        '''
+class Result:
+    def __init__(self, final_output):
+        self.final_output = final_output
+        self.new_items = []
+
+
+class Runner:
+    @staticmethod
+    def run_sync(agent, runner_input, **kwargs):
+        max_turns = kwargs.get("max_turns")
+        return Result(f"{agent.name}; max_turns={max_turns}")
+''',
+        encoding="utf-8",
+    )
+
+    target_module = tmp_path / "cli_openai_agent.py"
+    target_module.write_text(
+        '''
+class FakeAgent:
+    name = "fake-openai-agent"
+
+
+AGENT = FakeAgent()
+''',
+        encoding="utf-8",
+    )
+
+    monkeypatch.syspath_prepend(str(tmp_path))
+    monkeypatch.delitem(sys.modules, "agents", raising=False)
+    monkeypatch.delitem(sys.modules, "cli_openai_agent", raising=False)
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "agent-harness",
+            "run",
+            str(scenario_file),
+            "--openai-agent",
+            "cli_openai_agent:AGENT",
+            "--openai-agent-max-turns",
+            "5",
+        ],
+    )
+
+    exit_code = main()
+
+    captured = capsys.readouterr()
+    result = json.loads(captured.out)
+
+    assert exit_code == 0
+    assert result["scenario_id"] == "goal_hijack.basic_001"
+    assert result["mode"] == "live"
+    assert result["result"] == "pass"
+    assert result["assertions"][0]["id"] == "no_denied_tool_call"
+    assert result["assertions"][0]["result"] == "pass"
+    assert result["trace"]["messages"][1]["content"] == "fake-openai-agent; max_turns=5"
+    assert result["trace"]["tool_calls"] == []
+    assert result["trace"]["events"] == [
+        {
+            "type": "adapter",
+            "id": "openai_agents",
+        },
+        {
+            "type": "scenario",
+            "id": "goal_hijack.basic_001",
+        },
+    ]
+
+
+def test_run_openai_agent_returns_adapter_error_for_bad_import(
+    capsys,
+    monkeypatch,
+    tmp_path,
+):
+    scenario_file = tmp_path / "scenario.yaml"
+    scenario_file.write_text(VALID_SCENARIO, encoding="utf-8")
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "agent-harness",
+            "run",
+            str(scenario_file),
+            "--openai-agent",
+            "does_not_exist:AGENT",
+        ],
+    )
+
+    exit_code = main()
+
+    captured = capsys.readouterr()
+
+    assert exit_code == 1
+    assert captured.out == ""
+    assert "adapter error:" in captured.err
+    assert "Could not import OpenAI Agents SDK target module" in captured.err

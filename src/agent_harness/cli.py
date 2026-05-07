@@ -10,6 +10,7 @@ from agent_harness.adapters import AdapterError
 from agent_harness.runner import (
     dry_run_scenario,
     run_scenario_live,
+    run_scenario_with_openai_agent,
     run_scenario_with_python_target,
     run_scenario_with_trace,
 )
@@ -82,6 +83,18 @@ def build_parser() -> argparse.ArgumentParser:
             "module:function format."
         ),
     )
+    run_parser.add_argument(
+        "--openai-agent",
+        help=(
+            "Run the scenario against an OpenAI Agents SDK Agent loaded from "
+            "a module:object import path."
+        ),
+    )
+    run_parser.add_argument(
+        "--openai-agent-max-turns",
+        type=int,
+        help="Optional max_turns value passed to the OpenAI Agents SDK runner.",
+    )
 
     return parser
 
@@ -110,12 +123,13 @@ def main() -> int:
             args.trace_file is not None,
             args.live,
             args.python_target is not None,
+            args.openai_agent is not None,
         ]
 
         if sum(bool(mode) for mode in selected_modes) != 1:
             parser.error(
                 "'run' requires exactly one of --dry-run, --trace-file, "
-                "--live, or --python-target"
+                "--live, --python-target, or --openai-agent"
             )
 
         if args.live and not args.target_url:
@@ -123,6 +137,15 @@ def main() -> int:
 
         if args.target_url and not args.live:
             parser.error("--target-url can only be used with --live")
+
+        if args.openai_agent_max_turns is not None and args.openai_agent is None:
+            parser.error("--openai-agent-max-turns can only be used with --openai-agent")
+
+        if (
+            args.openai_agent_max_turns is not None
+            and args.openai_agent_max_turns <= 0
+        ):
+            parser.error("--openai-agent-max-turns must be greater than zero")
 
         try:
             scenario = load_scenario(args.scenario_file)
@@ -144,6 +167,16 @@ def main() -> int:
                 result = run_scenario_with_python_target(
                     scenario,
                     args.python_target,
+                )
+            except AdapterError as exc:
+                print(f"adapter error: {exc}", file=sys.stderr)
+                return 1
+        elif args.openai_agent:
+            try:
+                result = run_scenario_with_openai_agent(
+                    scenario,
+                    args.openai_agent,
+                    max_turns=args.openai_agent_max_turns,
                 )
             except AdapterError as exc:
                 print(f"adapter error: {exc}", file=sys.stderr)

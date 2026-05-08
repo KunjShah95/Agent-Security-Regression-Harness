@@ -470,7 +470,7 @@ Planned adapter families include:
 
 - OpenAI Agents SDK adapter
 - LangChain/LangGraph adapter
-- MCP adapter
+- MCP adapter (see [MCP Adapter Design](mcp-adapter-design.md))
 
 Each adapter must follow the same rule:
 

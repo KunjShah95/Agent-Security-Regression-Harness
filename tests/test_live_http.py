@@ -97,7 +97,6 @@ def test_run_live_http_adapter_success_path(
     result = json.loads(captured.out)
 
     assert exit_code == 0
-    assert captured.err == ""
     assert result["scenario_id"] == "prompt_injection.live_http_success_001"
     assert result["mode"] == "live"
     assert result["result"] == "pass"

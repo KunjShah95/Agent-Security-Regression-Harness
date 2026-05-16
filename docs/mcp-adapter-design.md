@@ -399,22 +399,22 @@ HTTP coverage because stdio is easier to run deterministically in CI.
 ## References
 
 - MCP architecture overview:
-  https://modelcontextprotocol.io/docs/learn/architecture
+  <https://modelcontextprotocol.io/docs/learn/architecture>
 - MCP specification overview, version 2025-11-25:
-  https://modelcontextprotocol.io/specification/2025-11-25/basic
+  <https://modelcontextprotocol.io/specification/2025-11-25/basic>
 - MCP lifecycle specification, version 2025-11-25:
-  https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle
+  <https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle>
 - MCP transports specification, version 2025-11-25:
-  https://modelcontextprotocol.io/specification/2025-11-25/basic/transports
+  <https://modelcontextprotocol.io/specification/2025-11-25/basic/transports>
 - MCP tools specification, version 2025-11-25:
-  https://modelcontextprotocol.io/specification/2025-11-25/server/tools
+  <https://modelcontextprotocol.io/specification/2025-11-25/server/tools>
 - MCP resources specification, version 2025-11-25:
-  https://modelcontextprotocol.io/specification/2025-11-25/server/resources
+  <https://modelcontextprotocol.io/specification/2025-11-25/server/resources>
 - MCP prompts specification, version 2025-11-25:
-  https://modelcontextprotocol.io/specification/2025-11-25/server/prompts
+  <https://modelcontextprotocol.io/specification/2025-11-25/server/prompts>
 - MCP roots specification, version 2025-11-25:
-  https://modelcontextprotocol.io/specification/2025-11-25/client/roots
+  <https://modelcontextprotocol.io/specification/2025-11-25/client/roots>
 - MCP sampling specification, version 2025-11-25:
-  https://modelcontextprotocol.io/specification/2025-11-25/client/sampling
+  <https://modelcontextprotocol.io/specification/2025-11-25/client/sampling>
 - MCP security best practices:
-  https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices
+  <https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices>

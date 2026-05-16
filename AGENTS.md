@@ -6,13 +6,13 @@ This file helps AI coding agents (Claude, Copilot, Cursor, etc.) understand this
 
 A Python CLI tool (`agent-harness`) that runs executable security regression scenarios against AI agents and MCP-integrated systems. It checks that security policies hold after code/prompt changes.
 
-```
+``` python
 pip install -e . && agent-harness run scenarios/goal_hijack/basic.yaml --dry-run
 ```
 
 ## Architecture
 
-```
+```python
 src/agent_harness/
   cli.py          # Entry point. argparse-based. Subcommands: version, validate, run
   scenario.py     # Loads & validates YAML scenarios (Scenario dataclass)

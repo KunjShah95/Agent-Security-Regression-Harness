@@ -145,11 +145,13 @@ Done. The harness Python API works end-to-end.
 ## Live HTTP agent demo
 
 Terminal 1:
+
 ```bash
 python docs/cookbook/examples/custom_http_agent_005.py
 ```
 
 Terminal 2:
+
 ```bash
 agent-harness run docs/cookbook/examples/hello_scenario_001.yaml \
   --live --target-url http://127.0.0.1:9000/run

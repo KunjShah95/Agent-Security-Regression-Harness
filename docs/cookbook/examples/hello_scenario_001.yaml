@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../schemas/scenario.schema.json
 id: cookbook.hello_world_001
 title: Hello world scenario for the cookbook
 category: goal_hijack

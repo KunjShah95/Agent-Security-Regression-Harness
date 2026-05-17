@@ -1,8 +1,8 @@
 """Runnable minimal HTTP agent for the harness.
 
 Usage:
-    Terminal 1:  python docs/cookbook/examples/05_custom_http_agent.py
-    Terminal 2:  agent-harness run docs/cookbook/examples/01_hello_scenario.yaml \\
+    Terminal 1:  python docs/cookbook/examples/custom_http_agent_005.py
+    Terminal 2:  agent-harness run docs/cookbook/examples/hello_scenario_001.yaml \\
                     --live --target-url http://127.0.0.1:9000/run
 """
 
